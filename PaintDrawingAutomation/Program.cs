@@ -75,6 +75,25 @@ namespace PaintDrawingAutomation
 
         static volatile bool Drawing = true;
         static volatile bool DoneDrawing = true;
+        static void OpenPaintWithKeystrokes(InputSimulator sim)
+        {
+            Console.WriteLine("Opening Paint with keystrokes");
+            sim.Keyboard.KeyPress(VirtualKeyCode.LWIN);
+            Thread.Sleep(200);
+            sim.Keyboard.KeyPress(VirtualKeyCode.VK_P);
+            Thread.Sleep(200);
+            sim.Keyboard.KeyPress(VirtualKeyCode.VK_A);
+            Thread.Sleep(200);
+            sim.Keyboard.KeyPress(VirtualKeyCode.VK_I);
+            Thread.Sleep(200);
+            sim.Keyboard.KeyPress(VirtualKeyCode.VK_N);
+            Thread.Sleep(200);
+            sim.Keyboard.KeyPress(VirtualKeyCode.VK_T);
+            Thread.Sleep(1500);
+            sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+            Thread.Sleep(1500);
+        }
+
 
         static void Main(string[] args)
         {
@@ -112,6 +131,10 @@ namespace PaintDrawingAutomation
             DoneDrawing = false;
             POINT PenButton_Pos, prev_pos;
             List<POINT> coords = new List<POINT>();
+            //Handles for processes
+            IntPtr paintHandle, mainConsole = IntPtr.Zero;
+            //get simulator for input
+            InputSimulator sim = new InputSimulator();
             //image recognition for the pen position if we know what the image looks like
             PenButton_Pos.X = PEN_BUTTON_X;
             PenButton_Pos.Y = PEN_BUTTON_Y;
@@ -129,29 +152,9 @@ namespace PaintDrawingAutomation
                 
                
             }
+            OpenPaintWithKeystrokes(sim);
 
-            IntPtr mainConsole = IntPtr.Zero;
-            mainConsole = Process.GetCurrentProcess().MainWindowHandle;
-            InputSimulator sim = new InputSimulator();
-            prev_pos.X = 0;
-            prev_pos.Y = 0;
-            Console.WriteLine("Opening Paint with keystrokes");
-            sim.Keyboard.KeyPress(VirtualKeyCode.LWIN);
-            Thread.Sleep(200);
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_P);
-            Thread.Sleep(200);
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_A);
-            Thread.Sleep(200);
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_I);
-            Thread.Sleep(200);
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_N);
-            Thread.Sleep(200);
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_T);
-            Thread.Sleep(1500);
-            sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
-            Thread.Sleep(1500);
-
-            IntPtr paintHandle = IntPtr.Zero;
+           
             mainConsole = GetProcessByName("WindowsTerminal");
             paintHandle = GetProcessByName("mspaint");
 

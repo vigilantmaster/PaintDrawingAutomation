@@ -97,6 +97,15 @@ namespace PaintDrawingAutomation
 
         static void Main(string[] args)
         {
+            while (true)
+            {
+                DisplayMenu();
+
+            }
+        }
+
+        private static void DisplayMenu()
+        {
             //display menu with options
             while (true)
             {
@@ -106,7 +115,12 @@ namespace PaintDrawingAutomation
                 Console.WriteLine("3. Exit");
                 Console.Write("Enter your choice: ");
 
-                string choice = Console.ReadLine();
+                string? choice = Console.ReadLine();
+                if (string.IsNullOrEmpty(choice))
+                {
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    continue;
+                }
 
                 switch (choice)
                 {
@@ -149,12 +163,12 @@ namespace PaintDrawingAutomation
 
 
                 imagePath = getImageFileName(); // Get the path from DrawImage() somehow
-                
-               
+
+
             }
             OpenPaintWithKeystrokes(sim);
 
-           
+
             mainConsole = GetProcessByName("WindowsTerminal");
             paintHandle = GetProcessByName("mspaint");
 
@@ -200,13 +214,13 @@ namespace PaintDrawingAutomation
                     case "Circle":
                         DoneDrawing = DrawCircle(centerX, centerY, sim);
                         Console.WriteLine("Finished drawing Circle.");
-                       
+
                         SetForegroundWindow(paintHandle);
                         break;
                     case "Image":
-                        DoneDrawing = DrawImage(paintHandle , mainConsole, imagePath);
+                        DoneDrawing = DrawImage(paintHandle, mainConsole, imagePath);
                         Console.WriteLine("Finished drawing Image.");
-                        
+
                         SetForegroundWindow(paintHandle);
                         break;
                 }
@@ -230,14 +244,14 @@ namespace PaintDrawingAutomation
                 {
                     string imagePath = dialog.FileName;
                     Console.WriteLine("FileName:" + dialog.FileName); // Moved inside the if block
-                    
+
                     if (!File.Exists(imagePath))
                     {
                         Console.WriteLine("Image file not found.");
                         return null;
                     }
                     return imagePath;
-                    
+
                 }
                 else
                 {
@@ -301,9 +315,9 @@ namespace PaintDrawingAutomation
             }
             return IntPtr.Zero;
         }
-          
 
-        
+
+
         //Draw Circle Method
         static bool DrawCircle(double centerX, double centerY, InputSimulator sim)
         {
@@ -332,8 +346,8 @@ namespace PaintDrawingAutomation
                 Console.WriteLine("Processing");
                 if (File.Exists(imagePath) && paintHandle != null)
                 {
-                    
-                   
+
+
 
                     Bitmap originalImage = new Bitmap(imagePath);
                     Bitmap processedImage = ProcessImage(originalImage);
@@ -371,10 +385,6 @@ namespace PaintDrawingAutomation
 
             // 2. Apply Edge Detection (using Sobel operator)
             Bitmap edgeDetectedImage = ApplySobelEdgeDetection(blurredImage);
-           
-
-
-
             return edgeDetectedImage;
         }
         private static Bitmap ApplyGaussianBlur(Bitmap originalImage, int kernelSize, double sigma)
